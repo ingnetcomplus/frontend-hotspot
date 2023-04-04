@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+
+<html lang="es">
+	<head>
+		<meta charset="utf-8">
+		<title>Hotspot Login</title> 
+		<meta name="viewport" content="width=device-width, initial-scale=1"> 
+		<style>
+					
+			@font-face {
+				font-family: 'Montserrat';
+				src: url('./fuente-monserrat.ttf');
+				font-weight: 300;
+				font-style: bold;
+			}
+
+			* {
+			font-family: 'Montserrat';
+			box-sizing: border-box;
+			}
+		
+			body {
+				background-image: url('./puerto-cabello.jpg');
+				height: 100vh;
+				background-repeat: no-repeat;
+				background-size: cover;
+				background-position: center center;
+			}
+
+			.container {
+				max-width: 500px;
+				margin: 0 auto;
+			
+		
+			}
+			form{
+				color: #fff;
+				padding: 20px;
+				border-radius: 5px;
+				background-color: rgba(5, 53, 63, .7);
+				position: relative;
+				width: 100%;
+				background-image: linear-gradient(to top, rgba(0,0,0,0) 0%,rgba(0,0,0,0) 60%, rgba(255,255,255,1) 100%);
+			}
+			.form-header {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				margin-bottom: 20px;
+			}
+
+			.form-header h2 {
+				margin: 0;
+				font-size: 20px;
+				color: #333;
+			}
+
+			.form-header img {
+				height: 50px;
+			}
+
+			form {
+				display: flex;
+				flex-direction: column;		
+			}
+		
+			label {
+				margin-bottom: 10px;
+				font-size: 16px;
+				color: white;
+				text-transform: uppercase;
+			}
+
+			input[type="text"],
+			input[type="email"],
+			input[type="tel"],
+			select,
+			textarea {
+				padding: 10px;
+				border: 1px solid #ccc;
+				border-radius: 5px;
+				margin-bottom: 20px;
+			}
+
+			select {
+				background-color: #f2f2f2;
+			}
+			input[type="submit"],
+			button[type="submit"] {
+				background-color: #0b59e0;
+				color: white;
+				font-weight: bold;
+				font-size: 1rem;
+				padding: 10px;
+				border: none;
+				border-radius: 5px;
+				cursor: pointer;
+				width: 30%;
+				margin: 0 auto;
+			}
+
+			.tabs {
+				display: flex;
+				justify-content: center;
+				margin: 2rem 0;
+			}
+
+			.tabs button {
+				background-color: white;
+				border: none;
+				color: black;
+				padding: 10px 20px;
+				font-size: 16px;
+				cursor: pointer;
+				transition: background-color 0.3s ease;
+				width: 200px;
+				font-weight: bold;
+				font-size: 1rem;
+				border-radius: 5px;	
+				text-transform: uppercase;
+			}
+			.content {
+				display: none;
+			}
+			.active-btn {
+				display: block;
+							
+			}
+			.center{
+				display: flex;
+				justify-content: center;
+				margin: 3rem 0;	
+			}
+			.center img{
+				width: 250px;
+			}
+			.active-color{
+				background-color: #0b59e0!important;
+				color: white!important;
+				margin: 0 1rem;
+				box-shadow: 0px 2px 2px rgba(0, 0, 0, .9);	
+			}
+
+						/* Estilo para el modal */
+			.modal {
+			display: none; /* Ocultar por defecto */
+			position: fixed; /* Posición fija */
+			z-index: 1; /* Z-index alto para que esté encima del contenido */
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+			overflow: auto; /* Habilitar scroll */
+			background-color: rgba(0,0,0,0.4); /* Color de fondo semitransparente */
+			}
+
+			/* Estilo para el contenido del modal */
+			.modal-content {
+			background-color: #fefefe;
+			margin: 10% auto;
+			padding: 20px;
+			border: 1px solid #888;
+			width: 80%;
+			max-width: 600px;
+			}
+
+			/* Estilo para el botón de cerrar */
+			.close {
+			color: #aaa;
+			float: right;
+			font-size: 28px;
+			font-weight: bold;
+			}
+
+			.close:hover,
+			.close:focus {
+			color: black;
+			text-decoration: none;
+			cursor: pointer;
+			}
+
+			/* Estilo para el formulario dentro del modal */
+			.modal-formulario {
+			display: none; /* Ocultar por defecto */
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			}
+
+			/* Estilo para el texto dentro del modal */
+			.modal-texto {
+				display: none; /* Ocultar por defecto */
+				font-size: 1.2rem;
+				text-align: center;
+				font-weight: bold;
+			}
+			.modal-formulario-boton{
+				padding: 1rem;
+				background-color: #0b59e0;
+				color: white;
+				border-radius: 5px;
+				text-decoration: none;
+			}
+		</style>
+
+
+
+	<script>
+		function mostrarOtraZona() {
+			var zonaResidencial = document.getElementById("zona_de_residencia");
+			var otraZonaResidencial = document.getElementById("otra_zona_residencial");
+
+			if (zonaResidencial.value == "otra") {
+				otraZonaResidencial.style.display = "flex";
+       			otraZonaResidencial.style.flexDirection = "column";
+			} else {
+				otraZonaResidencial.style.display = "none";
+			}
+		}
+
+
+		function enviarDatos() {
+			event.preventDefault();
+			var nombre = document.getElementById("nombre").value;
+			var correo = document.getElementById("correo").value;
+			var zonaResidencial = document.getElementById("zona_de_residencia").value;
+			var otraZonaResidencial = document.getElementById("otra_zona_residencial_texto").value;
+			var telefono = document.getElementById("tlf_de_contacto").value;
+
+			if (zonaResidencial == "otra") {
+				zonaResidencial = otraZonaResidencial;
+			}
+
+			// Validar los campos requeridos
+			if (nombre == "" || correo == "" || zonaResidencial == "" || telefono == "") {
+				abrirModal(false, 'Por favor, complete todos los campos requeridos');
+				return false;
+			}
+
+			// Validar el formato del correo electrónico
+			var correoRegex = /^\S+@\S+\.\S+$/;
+			if (!correoRegex.test(correo)) {
+				abrirModal(false, 'Por favor, ingrese un correo electrónico válido');
+				alert("");
+				return false;
+			}
+
+			// Crear el objeto de usuario
+			var usuario = {
+				nombre_apellido: nombre,
+				email: correo,
+				zona_residencial: zonaResidencial,
+				telefono: telefono
+			};
+			console.log(usuario);
+			
+			//  Enviar el objeto de usuario a la API
+			fetch("https://hotspot-node-production.up.railway.app/usuarios", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify(usuario)
+			})
+			.then(response => {
+				if (!response.ok) {
+					abrirModal(false, 'Error al enviar los datos');
+				}
+				if(response.status == 409){
+					abrirModal(false, 'El correo ya existe en la base de datos, debes iniciar sesion.');	
+				}else{
+				
+					abrirModal(true, null);
+				}				
+			})
+			.catch(error => {
+				abrirModal(false, 'Error al enviar los datos');	
+			});
+
+		
+		}
+		function mostrarContenido(id) {
+			var registro1 = document.getElementById("registro1");
+			var login2 = document.getElementById("login2");
+			var btn1 = document.getElementById("btn1");
+			var btn2 = document.getElementById("btn2");
+
+			if (id === "registro1") {
+				registro1.style.display = "block";
+				login2.style.display = "none";
+				btn1.classList.add("active-color"); // Agrega la clase active-color al botón 1
+				btn2.classList.remove("active-color"); // Quita la clase active-color del botón 2
+			} else {
+				registro1.style.display = "none";
+				login2.style.display = "block";
+				btn1.classList.remove("active-color"); // Quita la clase active-color del botón 1
+				btn2.classList.add("active-color"); // Agrega la clase active-color al botón 2
+			}
+		}
+
+		function verificarCorreoElectronico(){
+			event.preventDefault();
+			const email = document.querySelector('#email').value;
+
+				// Validar el formato del correo electrónico
+			var correoRegex = /^\S+@\S+\.\S+$/;
+			if (!correoRegex.test(email)) {
+				abrirModal(false, 'Por favor, ingrese un correo electrónico válido');
+				return false;
+			}
+
+			
+			// Enviar solicitud al servidor
+			fetch('https://hotspot-node-production.up.railway.app/usuarios/verificar-correo', {
+				method: 'POST',
+				headers: {
+				'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({ email })
+			})
+			.then(response => {
+				if (response.ok) {
+					// Si el correo electrónico ya existe en la base de datos, darle acceso.
+					abrirModal(true, null);
+				} else if (response.status === 409) {
+					// Si la respuesta no es exitosa, mostrar un mensaje de éxito en la interfaz de usuario
+					abrirModal(false, 'El correo electrónico no existe en la base de datos, debes registrarte');
+					
+				} else {
+					// Si hay algún otro error, mostrar un mensaje genérico en la interfaz de usuario
+					abrirModal(false, 'Ocurrió un error al verificar el correo electrónico');
+				}
+			})
+			.catch(error => {
+				abrirModal(false, 'Ocurrió un error al verificar el correo electrónico');
+			});
+		}
+
+		function abrirModal(mostrarFormulario, texto) {
+			// Obtener el modal y los elementos dentro de él
+			var modal = document.getElementById("mi-modal");
+			var modalFormulario = document.getElementById("modal-formulario");
+			var modalTexto = document.getElementById("modal-texto");
+
+			// Si se debe mostrar el formulario
+			if (mostrarFormulario) {
+				// Mostrar el formulario y ocultar el texto
+				modalFormulario.style.display = "flex";
+				modalTexto.style.display = "none";
+			} else {
+				// Mostrar el texto y ocultar el formulario
+				modalFormulario.style.display = "none";
+				modalTexto.style.display = "block";
+				modalTexto.innerHTML = texto; // Agregar el texto al elemento
+			}
+
+			// Mostrar el modal
+			modal.style.display = "block";
+
+			// Configurar el botón de cerrar
+			var closeBtn = document.getElementsByClassName("close")[0];
+			closeBtn.onclick = function() {
+				modal.style.display = "none";
+			}
+
+			// Cerrar el modal al hacer clic fuera de él
+			window.onclick = function(event) {
+				if (event.target == modal) {
+				modal.style.display = "none";
+				}
+			}
+		}
+	</script> 
+</head> 
+ <body> 
+	<div> 
+		<div> 
+			<div> 
+				
+				
+				$(if chap-id)
+				<form name="sendin" action="$(link-login-only)" method="post" style="display:none">
+					<input type="hidden" name="username" />
+					<input type="hidden" name="password" />
+					<input type="hidden" name="dst" value="$(link-orig)" />
+					<input type="hidden" name="popup" value="true" />
+				</form>
+
+				<script src="/md5.js"></script>
+				<script>
+					function doLogin() {
+						// document.sendin.username.value = document.login.username.value;
+						// document.sendin.password.value = hexMD5('$(chap-id)' + document.login.password.value + '$(chap-challenge)');
+						// document.sendin.submit();
+						// return false;
+					}
+
+				</script>
+				$(endif)
+
+				<div class="tabs">
+					<button id="btn1" class="active-btn active-color" onclick="mostrarContenido('registro1')">Registrarse</button>
+					<button id="btn2" onclick="mostrarContenido('login2')">Iniciar SesiÓn</button>
+				</div>
+				<div id="registro1" class="container content active-btn">
+					<form name="login-form" onsubmit="return enviarDatos()" method="post"> 
+						<div class="center">				
+							<img src="./logo.png" alt="logo">
+						</div>
+						<label for="nombre">Nombre y Apellido</label> 
+						<input type="text" id="nombre" name="nombre" placeholder="Ej: Pepito Perez">
+						
+						<label for="correo">Correo electrónico</label>
+						<input type="email" id="correo" name="correo" placeholder="Ej: correo@gmail.com">
+						
+						<label for="zona_de_residencia">Zona de residencia</label>
+					
+						<select id="zona_de_residencia" name="zona_de_residencia" onchange="mostrarOtraZona()">
+							<option value="">Seleccione una opción</option>
+							<option value="Urb. La Belisa">Urb. La Belisa</option>
+							<option value="Urb. Cumboto Norte">Urb. Cumboto Norte</option>
+							<option value="Urb. Cumboto Sur">Urb. Cumboto Sur</option>
+							<option value="Bartolome Solom">Bartolome Solom</option>
+							<option value="Malecón">Malecón</option>
+							<option value="Casco Histórico">Casco Histórico</option>
+							<option value="Casco Central">Casco Central</option>
+							<option value="Rancho Grande">Rancho Grande</option>
+							<option value="Tejerias">Tejerias</option>
+							<option value="Valle Seco">Valle Seco</option>
+							<option value="Urb. Cumboto II">Urb. Cumboto II</option>
+							<option value="San Millan">San Millan</option>
+							<option value="La Corina">La Corina</option>
+							<option value="Las Llaves">Las Llaves</option>
+							<option value="La Sorpresa">La Sorpresa</option>
+							<option value="otra">Otra</option>
+						</select>
+						
+						<div id="otra_zona_residencial" style="display: none;">
+							<label for="otra_zona_residencial_texto">Ingrese su zona de residencia</label>
+							<input type="text" id="otra_zona_residencial_texto" name="otra_zona_residencial" placeholder="Ej: Direccion II">
+						</div>
+						
+						<label for="tlf_de_contacto">Teléfono de contacto</label>
+						<input type="tel" id="tlf_de_contacto" name="tlf_de_contacto" placeholder="Ej: 04140009900">
+						
+						<input type="submit" value="Enviar">
+					</form>
+				</div>
+
+				<div id="login2" class="container content">
+					<form action="#" onsubmit="return verificarCorreoElectronico()" method="POST">
+						<div class="center">				
+							<img src="./logo.png" alt="logo">
+						</div>
+						<label for="email">Correo electrónico:</label>
+						<input type="email" id="email" name="email" placeholder="Ingrese su correo electrónico...">
+						<button type="submit">Enviar</button>
+					</form>
+				</div>
+				
+				
+				<div id="mi-modal" class="modal">
+					<div class="modal-content">
+					  <span class="close">&times;</span>
+					  <div id="modal-formulario" class="modal-formulario">
+						<h3>Presiona conectar</h3>
+						
+						<p class="info $(if error)alert$(endif)">
+							$(if error == "")
+								$(if trial == 'yes')
+									<a class="modal-formulario-boton" href="$(link-login-only)?dst=$(link-orig-esc)&amp;username=T-$(mac-esc)">Conectar</a>
+								$(else)
+									<h2>Has superado el límite.</h2>
+								$(endif)
+							$(endif)
+							$(if error)$(error)$(endif)
+						</p>
+					  </div>
+					  <div id="modal-texto" class="modal-texto">
+						
+					  </div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</body> 
+</html>
